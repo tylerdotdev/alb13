@@ -1,0 +1,4 @@
+vendor/
+.env
+ngrok
+index.html
