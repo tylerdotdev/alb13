@@ -40,8 +40,8 @@ func (irc *IRC) Connect() {
 		log.Println("Connected to:", irc.Channel)
 	})
 
-	go irc.onUserNoticeMessage()
-	go irc.onPrivateMessage()
+	go irc.Client.OnUserNoticeMessage(irc.handleUserNotice)
+	go irc.Client.OnPrivateMessage(irc.handlePrivateMessage)
 
 	err := irc.Client.Connect()
 	if err != nil {
@@ -96,7 +96,7 @@ func (irc *IRC) handleCheer(message twitch.PrivateMessage) {
 		Bits:    message.Bits,
 	}
 
-	event := Event{Type: RESUB, Data: cheer}
+	event := Event{Type: CHEER, Data: cheer}
 	irc.Events <- event
 }
 
@@ -120,12 +120,4 @@ func (irc *IRC) handlePrivateMessage(message twitch.PrivateMessage) {
 	if message.Bits > 0 {
 		irc.handleCheer(message)
 	}
-}
-
-func (irc *IRC) onUserNoticeMessage() {
-	irc.Client.OnUserNoticeMessage(irc.handleUserNotice)
-}
-
-func (irc *IRC) onPrivateMessage() {
-	irc.Client.OnPrivateMessage(irc.handlePrivateMessage)
 }
