@@ -35,7 +35,7 @@ func setupRoutes(pool *websocket.Pool) {
 		handleNotifcation(pool, w, r)
 	})
 
-	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		handleWs(pool, w, r)
 	})
 }
