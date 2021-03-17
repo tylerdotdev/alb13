@@ -49,7 +49,7 @@ func (twitch *Twitch) Connect() {
 	client.Join(twitch.Config.IRCChannel)
 
 	go client.OnConnect(func() {
-		log.Println("Connected to ", twitch.Config.IRCChannel)
+		log.Println("Connected to", twitch.Config.IRCChannel)
 	})
 
 	go client.OnUserNoticeMessage(twitch.handleUserNotice)

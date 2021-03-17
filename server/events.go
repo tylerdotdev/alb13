@@ -24,8 +24,10 @@ func eventHandler(pool *websocket.Pool, event twitch.Event) {
 		pool.Broadcast <- message
 		break
 	case twitch.CHEER:
-		message := websocket.BroadcastMessage{Event: event.Name, Data: event.CheerEvent}
-		pool.Broadcast <- message
+		if event.CheerEvent.Bits >= 100 {
+			message := websocket.BroadcastMessage{Event: event.Name, Data: event.CheerEvent}
+			pool.Broadcast <- message
+		}
 
 		if event.CheerEvent.Bits >= 500 && strings.Contains(event.CheerEvent.Message, "hydrate") {
 			message := websocket.BroadcastMessage{Event: "hydrate"}
