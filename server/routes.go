@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 
+	"antonlabs.io/alb13/twitch"
 	"antonlabs.io/alb13/twitch/eventsub"
 	"antonlabs.io/alb13/websocket"
 )
@@ -44,7 +45,7 @@ func handleWs(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
 	log.Println("Client connected to websocket")
 }
 
-func handleNotifcation(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
+func handleNotifcation(t *twitch.Twitch, w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -77,13 +78,13 @@ func handleNotifcation(pool *websocket.Pool, w http.ResponseWriter, r *http.Requ
 	}
 
 	if r.Header.Get("Twitch-Eventsub-Message-Type") == "notification" {
-		var notification eventsub.Notification
+		var notification twitch.Notification
 
 		if err := json.Unmarshal(body, &notification); err != nil {
 			log.Println("Error parsing challenge json", err)
 		}
 
 		w.WriteHeader(http.StatusNoContent)
-		handleNewNotification(pool, notification)
+		t.HandleEventSubNotification(notification)
 	}
 }

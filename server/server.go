@@ -7,32 +7,12 @@ import (
 	"os"
 
 	"antonlabs.io/alb13/twitch"
-	"antonlabs.io/alb13/twitch/eventsub"
-	"antonlabs.io/alb13/twitch/irc"
 	"antonlabs.io/alb13/websocket"
 )
 
-func handleChannelPoints(pool *websocket.Pool, event eventsub.Event) {
-	if event.Reward.Title == "Hydrate" {
-		log.Println("Hydrate redeemed")
-		message := websocket.BroadcastMessage{Event: "hydrate"}
-		pool.Broadcast <- message
-	}
-}
-
-func handleNewNotification(pool *websocket.Pool, notification eventsub.Notification) {
-	switch notification.Subscription.Type {
-	case twitch.ChannelPointsType:
-		handleChannelPoints(pool, notification.Event)
-		break
-	default:
-		break
-	}
-}
-
-func setupRoutes(pool *websocket.Pool) {
+func setupRoutes(pool *websocket.Pool, t *twitch.Twitch) {
 	http.HandleFunc("/notification", func(w http.ResponseWriter, r *http.Request) {
-		handleNotifcation(pool, w, r)
+		handleNotifcation(t, w, r)
 	})
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -40,7 +20,7 @@ func setupRoutes(pool *websocket.Pool) {
 	})
 }
 
-func setupTwitch(pool *websocket.Pool) {
+func setupTwitch(pool *websocket.Pool) twitch.Twitch {
 	broadcasterID := os.Getenv("TWITCH_BROADCASTER_ID")
 	channel := os.Getenv("TWITCH_CHANNEL")
 	clientID := os.Getenv("TWITCH_CLIENT_ID")
@@ -48,21 +28,20 @@ func setupTwitch(pool *websocket.Pool) {
 	whCallbackURL := os.Getenv("WH_CALLBACK_URL")
 	whSecret := os.Getenv("WH_SECRET")
 
-	t := twitch.NewTwitch(broadcasterID, clientID, clientSecret, whCallbackURL, whSecret)
+	t := twitch.NewTwitch(broadcasterID, clientID, clientSecret, channel, whCallbackURL, whSecret)
 	t.SubscribeToChannelPointsRedemptions()
-	t.StartIRC(channel, func(event irc.Event) {
-		message := websocket.BroadcastMessage{Event: event.Type, Data: event.Data}
-		pool.Broadcast <- message
-		log.Println(message.Event)
-	})
+	go t.Connect()
+	go onTwitchEvent(pool, t.Events)
+
+	return t
 }
 
 func Start() {
 	pool := websocket.NewPool()
 	go pool.Start()
 
-	setupRoutes(pool)
-	setupTwitch(pool)
+	t := setupTwitch(pool)
+	setupRoutes(pool, &t)
 
 	port := os.Getenv("PORT")
 

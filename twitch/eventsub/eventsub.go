@@ -8,7 +8,10 @@ import (
 	"net/http"
 )
 
-const BaseURL = "https://api.twitch.tv/helix"
+const (
+	BaseURL                 = "https://api.twitch.tv/helix"
+	ChannelPointsRedemption = "channel.channel_points_custom_reward_redemption.add"
+)
 
 // Condition represents condition data for subscription
 type Condition struct {
@@ -43,33 +46,6 @@ type Subscriptions struct {
 // Challenge represents challenge data from Twitch when sending a subscription request
 type Challenge struct {
 	Challenge    string       `json:"challenge"`
-	Subscription Subscription `json:"subscription"`
-}
-
-// Reward represents redeemed channel points reward data
-type Reward struct {
-	ID     string `json:"id"`
-	Title  string `json:"title"`
-	Prompt string `json:"prompt"`
-	Cost   int    `json:"cost"`
-}
-
-type Event struct {
-	ID                   string `json:"id"`
-	BroadcasterUserID    string `json:"broadcaster_user_id"`
-	BroadcasterUserLogin string `json:"broadcaster_user_login"`
-	BroadcasterUserName  string `json:"broadcaster_user_name"`
-	UserID               string `json:"user_id"`
-	UserLogin            string `json:"user_login"`
-	UserName             string `json:"user_name"`
-	Status               string `json:"status"`
-	RedeemedAt           string `json:"redeemed_at"`
-	Reward               Reward `json:"reward"`
-}
-
-// Notification represents a notification from EventSub
-type Notification struct {
-	Event        Event        `json:"event"`
 	Subscription Subscription `json:"subscription"`
 }
 
