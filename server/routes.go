@@ -10,9 +10,9 @@ import (
 	"net/http"
 	"os"
 
-	"antonlabs.io/alb13/twitch"
-	"antonlabs.io/alb13/twitch/eventsub"
-	"antonlabs.io/alb13/websocket"
+	"github.com/alb13/twitch"
+	"github.com/alb13/twitch/eventsub"
+	"github.com/alb13/websocket"
 )
 
 func verifySignature(signature string, id string, timestamp string, body []byte) bool {

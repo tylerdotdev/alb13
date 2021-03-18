@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"antonlabs.io/alb13/server"
+	"github.com/alb13/server"
 	"github.com/joho/godotenv"
 )
 

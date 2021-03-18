@@ -1,4 +1,4 @@
-module antonlabs.io/alb13
+module github.com/alb13
 
 go 1.16
 

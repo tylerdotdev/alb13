@@ -1,6 +1,6 @@
 package twitch
 
-import "antonlabs.io/alb13/twitch/eventsub"
+import "github.com/alb13/twitch/eventsub"
 
 const (
 	SUB        = "sub"

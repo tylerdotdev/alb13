@@ -4,8 +4,8 @@ import (
 	"log"
 	"strings"
 
-	"antonlabs.io/alb13/twitch"
-	"antonlabs.io/alb13/websocket"
+	"github.com/alb13/twitch"
+	"github.com/alb13/websocket"
 )
 
 func handleSub(pool *websocket.Pool, event twitch.Event) {

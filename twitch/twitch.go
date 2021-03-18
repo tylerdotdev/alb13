@@ -3,8 +3,8 @@ package twitch
 import (
 	"log"
 
-	"antonlabs.io/alb13/twitch/auth"
-	"antonlabs.io/alb13/twitch/eventsub"
+	"github.com/alb13/twitch/auth"
+	"github.com/alb13/twitch/eventsub"
 	irc "github.com/gempir/go-twitch-irc/v2"
 )
 
