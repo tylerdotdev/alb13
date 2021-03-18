@@ -40,9 +40,9 @@ func handleWs(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
 		Pool: pool,
 	}
 
-	pool.Register <- client
-
 	log.Println("Client connected to websocket")
+	pool.Register <- client
+	client.Read()
 }
 
 func handleNotifcation(t *twitch.Twitch, w http.ResponseWriter, r *http.Request) {
