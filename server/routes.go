@@ -56,6 +56,7 @@ func handleNotifcation(t *twitch.Twitch, w http.ResponseWriter, r *http.Request)
 
 	if err != nil {
 		log.Println("Failed to parse request body", err)
+		return
 	}
 
 	if !verifySignature(
@@ -73,6 +74,7 @@ func handleNotifcation(t *twitch.Twitch, w http.ResponseWriter, r *http.Request)
 
 		if err := json.Unmarshal(body, &challenge); err != nil {
 			log.Println("Error parsing challenge json", err)
+			return
 		}
 
 		w.Write([]byte(challenge.Challenge))
@@ -82,7 +84,8 @@ func handleNotifcation(t *twitch.Twitch, w http.ResponseWriter, r *http.Request)
 		var notification twitch.Notification
 
 		if err := json.Unmarshal(body, &notification); err != nil {
-			log.Println("Error parsing challenge json", err)
+			log.Println("Error parsing notification json", err)
+			return
 		}
 
 		w.WriteHeader(http.StatusNoContent)
