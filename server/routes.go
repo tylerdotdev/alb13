@@ -33,6 +33,7 @@ func handleWs(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		log.Println("Error upgrading connection", err)
+		return
 	}
 
 	client := &websocket.Client{
