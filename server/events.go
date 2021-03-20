@@ -25,10 +25,9 @@ func handleGiftSub(pool *websocket.Pool, event twitch.Event) {
 
 func handleRaid(pool *websocket.Pool, event twitch.Event) {
 	if event.RaidEvent.Viewers >= 25 {
-		message := websocket.BroadcastMessage{Event: event.Name, Data: event.GiftSubEvent}
+		message := websocket.BroadcastMessage{Event: event.Name, Data: event.RaidEvent}
 		pool.Broadcast <- message
 	}
-
 }
 
 func handleCheer(pool *websocket.Pool, event twitch.Event) {
