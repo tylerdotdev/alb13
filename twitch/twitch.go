@@ -2,6 +2,7 @@ package twitch
 
 import (
 	"log"
+	"strconv"
 
 	"github.com/alb13/twitch/auth"
 	"github.com/alb13/twitch/eventsub"
@@ -85,7 +86,6 @@ func (twitch *Twitch) HandleEventSubNotification(notification Notification) {
 	case eventsub.ChannelPointsRedemption:
 		event := Event{Name: REDEMPTION, NotificationEvent: notification.Event}
 		twitch.Events <- event
-		break
 	default:
 		break
 	}
@@ -124,6 +124,22 @@ func (twitch *Twitch) handleGiftSub(message irc.UserNoticeMessage) {
 	twitch.Events <- event
 }
 
+func (twitch *Twitch) handleRaid(message irc.UserNoticeMessage) {
+	viewers, err := strconv.Atoi(message.MsgParams["msg-param-viewerCount"])
+
+	if err != nil {
+		log.Println("Error parsing Raid viewer count", err)
+	}
+
+	raid := RaidEvent{
+		From:    message.User.DisplayName,
+		Viewers: viewers,
+	}
+
+	event := Event{Name: RAID, RaidEvent: raid}
+	twitch.Events <- event
+}
+
 func (twitch *Twitch) handleCheer(message irc.PrivateMessage) {
 	cheer := CheerEvent{
 		User:    message.User.DisplayName,
@@ -139,13 +155,12 @@ func (twitch *Twitch) handleUserNotice(message irc.UserNoticeMessage) {
 	switch message.MsgID {
 	case SUB:
 		twitch.handleSub(message)
-		break
 	case RESUB:
 		twitch.handleResub(message)
-		break
 	case GIFTSUB:
 		twitch.handleGiftSub(message)
-		break
+	case RAID:
+		twitch.handleRaid(message)
 	default:
 		break
 	}

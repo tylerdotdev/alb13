@@ -23,6 +23,14 @@ func handleGiftSub(pool *websocket.Pool, event twitch.Event) {
 	pool.Broadcast <- message
 }
 
+func handleRaid(pool *websocket.Pool, event twitch.Event) {
+	if event.RaidEvent.Viewers >= 25 {
+		message := websocket.BroadcastMessage{Event: event.Name, Data: event.GiftSubEvent}
+		pool.Broadcast <- message
+	}
+
+}
+
 func handleCheer(pool *websocket.Pool, event twitch.Event) {
 	if event.CheerEvent.Bits >= 100 {
 		message := websocket.BroadcastMessage{Event: event.Name, Data: event.CheerEvent}
@@ -48,16 +56,14 @@ func eventHandler(pool *websocket.Pool, event twitch.Event) {
 	switch event.Name {
 	case twitch.SUB:
 		handleSub(pool, event)
-		break
 	case twitch.RESUB:
 		handleResub(pool, event)
-		break
 	case twitch.GIFTSUB:
 		handleGiftSub(pool, event)
-		break
+	case twitch.RAID:
+		handleRaid(pool, event)
 	case twitch.CHEER:
 		handleCheer(pool, event)
-		break
 	case twitch.REDEMPTION:
 		handleRedemption(pool, event)
 	default:

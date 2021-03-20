@@ -6,6 +6,7 @@ const (
 	SUB        = "sub"
 	RESUB      = "resub"
 	GIFTSUB    = "subgift"
+	RAID       = "RAID"
 	CHEER      = "cheer"
 	REDEMPTION = "redemption"
 )
@@ -47,8 +48,8 @@ type CheerEvent struct {
 }
 
 type RaidEvent struct {
-	FromUser string `json:"fromUser"`
-	Viewers  int    `json:"viewers"`
+	From    string `json:"from"`
+	Viewers int    `json:"viewers"`
 }
 
 // Reward represents redeemed channel points reward data
