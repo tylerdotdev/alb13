@@ -66,6 +66,7 @@ func handleNotifcation(t *twitch.Twitch, w http.ResponseWriter, r *http.Request)
 		body,
 	) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
+		log.Println("Invalid notification signature")
 		return
 	}
 
