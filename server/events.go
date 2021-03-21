@@ -42,6 +42,11 @@ func handleCheer(pool *websocket.Pool, event twitch.Event) {
 	}
 }
 
+func handleMessage(pool *websocket.Pool, event twitch.Event) {
+	message := websocket.BroadcastMessage{Event: event.Name, Data: event.MessageEvent}
+	pool.Broadcast <- message
+}
+
 func handleRedemption(pool *websocket.Pool, event twitch.Event) {
 	if event.NotificationEvent.Reward.Title == "Hydrate" {
 		log.Println("Hydrate redeemed")
@@ -63,6 +68,8 @@ func eventHandler(pool *websocket.Pool, event twitch.Event) {
 		handleRaid(pool, event)
 	case twitch.CHEER:
 		handleCheer(pool, event)
+	case twitch.MESSAGE:
+		handleMessage(pool, event)
 	case twitch.REDEMPTION:
 		handleRedemption(pool, event)
 	default:

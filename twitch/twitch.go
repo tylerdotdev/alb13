@@ -151,6 +151,16 @@ func (twitch *Twitch) handleCheer(message irc.PrivateMessage) {
 	twitch.Events <- event
 }
 
+func (twitch *Twitch) handleMessage(message irc.PrivateMessage) {
+	msg := MessageEvent{
+		User:    message.User.DisplayName,
+		Message: message.Message,
+	}
+
+	event := Event{Name: "message", MessageEvent: msg}
+	twitch.Events <- event
+}
+
 func (twitch *Twitch) handleUserNotice(message irc.UserNoticeMessage) {
 	switch message.MsgID {
 	case SUB:
@@ -169,5 +179,7 @@ func (twitch *Twitch) handleUserNotice(message irc.UserNoticeMessage) {
 func (twitch *Twitch) handlePrivateMessage(message irc.PrivateMessage) {
 	if message.Bits > 0 {
 		twitch.handleCheer(message)
+	} else {
+		twitch.handleMessage(message)
 	}
 }
