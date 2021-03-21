@@ -56,7 +56,10 @@ func handleRedemption(pool *websocket.Pool, event twitch.Event) {
 }
 
 func eventHandler(pool *websocket.Pool, event twitch.Event) {
-	log.Println(event.Name)
+	if event.Name != twitch.MESSAGE {
+		log.Println(event.Name)
+	}
+
 	switch event.Name {
 	case twitch.SUB:
 		handleSub(pool, event)
