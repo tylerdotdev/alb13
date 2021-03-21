@@ -6,7 +6,7 @@ const (
 	SUB        = "sub"
 	RESUB      = "resub"
 	GIFTSUB    = "subgift"
-	RAID       = "RAID"
+	RAID       = "raid"
 	CHEER      = "cheer"
 	MESSAGE    = "message"
 	REDEMPTION = "redemption"
